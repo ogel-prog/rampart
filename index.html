@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta name="description" content="トランプだけで遊べる対戦型タワーディフェンスゲーム">
+
+	<meta property="og:title" content="Rampart 〜砦と瓦礫〜">
+	<meta property="og:description" content="トランプだけで遊べる対戦型タワーディフェンスカードゲーム。3x3グリッドで壁を築き、割り算攻撃で貫通を狙え。">
+	<meta property="og:image" content="https://ogel-prog.github.io/rampart/assets/images/logo.png">
+	<meta property="og:url" content="https://ogel-prog.github.io/rampart/">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Rampart Card Game">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Rampart 〜砦と瓦礫〜">
+	<meta name="twitter:description" content="トランプだけで遊べる戦略カードゲーム">
+	<meta name="twitter:image" content="https://ogel-prog.github.io/rampart/assets/images/logo.png">
+
+	<link rel="icon" href="./assets/images/favicon.ico">
+	<link rel="apple-touch-icon" href="./assets/images/apple-touch-icon.png">
+	<link rel="manifest" href="./assets/images/manifest.webmanifest">
+
+	<link rel="stylesheet" href="./assets/bootstrap/bootstrap.min.css?v=1.0">
+	<link rel="stylesheet" href="./assets/font/fontawesome.min.css?v=1.0">
+
+	<title>Rampart 〜砦と瓦礫〜 ルールブック</title>
+
+	<style>
+	@font-face {
+		font-family: 'SawarabiGothic';
+		src: url('./assets/font/sawarabi-gothic.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	:root {
+		--rampart-accent: #c0392b;
+		--rampart-gold: #b7860b;
+		--rampart-light-bg: #f8f6f2;
+		--rampart-section-bg: #ffffff;
+		--rampart-border: #d4c9b0;
+		--rampart-text: #1a1a1a;
+		--rampart-muted: #555555;
+		--rampart-sub-bg: #f0ece4;
+		--card-size-sm: 48px;
+		--card-size-md: 64px;
+		--card-size-lg: 80px;
+	}
+
+	body {
+		background-color: var(--rampart-light-bg);
+		color: var(--rampart-text);
+		font-family: 'SawarabiGothic', sans-serif;
+	}
+
+	p {
+		margin-bottom: 1.0rem!important;
+	}
+
+	/* ヘッダー */
+	.rulebook-hero {
+		background: #ffffff;
+		border-bottom: 3px solid var(--rampart-gold);
+		border-top: 6px solid var(--rampart-accent);
+		padding: 1rem 0;
+		text-align: center;
+	}
+	.rulebook-hero h1 {
+		font-size: clamp(2rem, 6vw, 3.2rem);
+		font-weight: 900;
+		letter-spacing: 0.12em;
+		color: var(--rampart-accent);
+	}
+	.rulebook-hero .subtitle {
+		color: var(--rampart-muted);
+		font-size: 1rem;
+		letter-spacing: 0.2em;
+	}
+	.info-badges .badge {
+		font-size: 0.82rem;
+		padding: 0.35em 0.85em;
+		border-radius: 2em;
+		margin: 0.2em;
+	}
+
+	/* ナビゲーション */
+	.toc-nav {
+		background: #ffffff;
+		border-bottom: 2px solid var(--rampart-border);
+		position: sticky;
+		top: 0;
+		z-index: 100;
+	}
+	.toc-nav .nav-link {
+		color: var(--rampart-muted);
+		font-size: 0.78rem;
+		padding: 0.6rem 0.75rem;
+		white-space: nowrap;
+		transition: color 0.2s;
+	}
+	.toc-nav .nav-link:hover {
+		color: var(--rampart-accent);
+	}
+
+	/* セクション共通 */
+	.rulebook-section {
+		padding: 1.5rem 0;
+		border-bottom: 1px solid var(--rampart-border);
+	}
+	.section-title {
+		font-size: 1.4rem;
+		font-weight: 700;
+		color: var(--rampart-accent);
+		border-left: 4px solid var(--rampart-gold);
+		padding-left: 0.75rem;
+		margin-bottom: 1.5rem;
+	}
+	.section-title .fa-solid {
+		margin-right: 0.4rem;
+		color: var(--rampart-gold);
+	}
+
+	/* カード画像 */
+	.card-img {
+		height: var(--card-size-md);
+		width: auto;
+		border-radius: 4px;
+		box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+		transition: transform 0.15s;
+	}
+	.card-img.sm { height: var(--card-size-sm); }
+	.card-img.lg { height: var(--card-size-lg); }
+	.card-img.rotate-90 { transform: rotate(90deg); }
+	.card-img.flip { opacity: 0.5; }
+
+	.card-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		align-items: flex-end;
+	}
+
+	/* グリッド壁図解 */
+	.wall-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 5px;
+		max-width: 130px;
+	}
+	.wall-slot {
+		background: var(--rampart-sub-bg);
+		border: 1px dashed var(--rampart-border);
+		border-radius: 3px;
+		margin-left: 1px;
+		width: 31px;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.68rem;
+		color: var(--rampart-muted);
+	}
+	.wall-slot.filled {
+		background: #fff8e8;
+		border: 1px solid var(--rampart-gold);
+	}
+	.wall-slot.strong {
+		background: #fff0ef;
+		border: 1px solid var(--rampart-accent);
+	}
+	.wall-slot.terrain {
+		background: #eef4f4;
+		border: 1px solid #7aadad;
+	}
+	.grid-row-label {
+		font-size: 0.62rem;
+		color: var(--rampart-muted);
+		text-align: right;
+		min-width: 31px;
+		padding-right: 3px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	/* フェーズカード */
+	.phase-card {
+		background: #ffffff;
+		border: 1px solid var(--rampart-border);
+		border-radius: 10px;
+		padding: 1rem;
+		margin-bottom: 1rem;
+		position: relative;
+	}
+	.phase-card::before {
+		content: attr(data-phase);
+		position: absolute;
+		top: -11px;
+		left: 10px;
+		background: var(--rampart-accent);
+		color: white;
+		font-size: 0.68rem;
+		font-weight: 700;
+		padding: 2px 12px;
+		border-radius: 99px;
+		letter-spacing: 0.08em;
+	}
+	.phase-card h4 {
+		color: var(--rampart-accent);
+		font-size: 1.05rem;
+		margin-bottom: 0.75rem;
+	}
+	.phase-optional {
+		font-size: 0.7rem;
+		color: var(--rampart-muted);
+		background: var(--rampart-sub-bg);
+		padding: 1px 8px;
+		border-radius: 99px;
+		margin-left: 0.4rem;
+	}
+
+	/* 効果表 */
+	.effect-table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+	.effect-table th {
+		background: var(--rampart-sub-bg);
+		color: var(--rampart-gold);
+		font-size: 0.78rem;
+		padding: 0.45rem 0.7rem;
+		border: 1px solid var(--rampart-border);
+	}
+	.effect-table td {
+		padding: 0.65rem 0.7rem;
+		border: 1px solid var(--rampart-border);
+		font-size: 0.85rem;
+		vertical-align: top;
+		background: #ffffff;
+	}
+	.effect-table tr:nth-child(even) td { background: var(--rampart-sub-bg); }
+
+	.suit-badge {
+		display: inline-flex;
+		align-items: center;
+	}
+	.suit-spade { color: #1a6080; }
+	.suit-diamond{ color: #c0392b; }
+	.suit-club { color: #1a7040; }
+	.suit-heart { color: #c0392b; }
+
+	/* 例示ボックス */
+	.example-box {
+		background: var(--rampart-sub-bg);
+		border: 1px solid var(--rampart-border);
+		border-radius: 7px;
+		padding: 1.0rem 0.8rem;
+		margin-top: 0.8rem;
+		font-size: 0.86rem;
+	}
+	.example-box .example-label {
+		color: var(--rampart-gold);
+		font-weight: 700;
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		margin-bottom: 0.4rem;
+	}
+
+	/* ルール強調 */
+	.rule-highlight {
+		background: #fff5f5;
+		border-left: 3px solid var(--rampart-accent);
+		padding: 0.55rem 0.9rem;
+		border-radius: 0 5px 5px 0;
+		font-size: 0.86rem;
+		margin: 0.5rem 0;
+	}
+	.rule-note {
+		background: #fffbee;
+		border-left: 3px solid var(--rampart-gold);
+		padding: 0.5rem;
+		border-radius: 0 5px 5px 0;
+		font-size: 0.83rem;
+		color: var(--rampart-muted);
+		margin: 0.5rem 0;
+	}
+
+	/* 勝利判定 */
+	.victory-step {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.9rem;
+		padding: 0.65rem 0;
+		border-bottom: 1px solid var(--rampart-border);
+	}
+	.victory-step:last-child { border-bottom: none; }
+	.victory-step .step-num {
+		background: var(--rampart-accent);
+		color: white;
+		font-weight: 700;
+		font-size: 0.85rem;
+		min-width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	/* ライフゾーン */
+	.lifezone-demo {
+		display: flex;
+		gap: 7px;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	/* 貫通グリッド */
+	.penetration-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 31px);
+		grid-template-rows: repeat(3, 48px);
+		gap: 3px;
+	}
+	.pen-slot {
+		background: var(--rampart-sub-bg);
+		border: 1px dashed var(--rampart-border);
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.68rem;
+		color: var(--rampart-muted);
+	}
+	.pen-slot.target { border: 2px solid var(--rampart-accent); background: #fff0ef; color: var(--rampart-accent); font-weight:700; }
+	.pen-slot.condition{ border: 2px solid var(--rampart-gold); background: #fffbee; color: var(--rampart-gold); font-weight:700; }
+
+	/* フッター */
+	.rulebook-footer {
+		background: #ffffff;
+		border-top: 2px solid var(--rampart-border);
+		padding: 1rem 0;
+		text-align: center;
+		color: var(--rampart-muted);
+		font-size: 0.8rem;
+	}
+
+	/* 内部リンク */
+	section.anchor {
+		display: block;
+		padding-top: 55px;
+		margin-top: -35px;
+	}
+
+	/* 印刷用 */
+	@media print {
+		body { background: #fff; }
+		.toc-nav { display: none; }
+		/*
+		.rulebook-section { page-break-inside: avoid; }
+		.phase-card { page-break-inside: avoid; }
+		.example-box { page-break-inside: avoid; }
+		*/
+		.page-break { break-before: page; }
+		.page-break-after { break-after: page; }
+		.no-break { break-inside: avoid; }
+		.card-img { box-shadow: none; }
+	}
+
+
+	@media (max-width: 576px) {
+		.penetration-grid { grid-template-columns: repeat(3, 31px); grid-template-rows: repeat(3, 48px); }
+		.card-img { height: 42px; }
+		.card-img.sm { height: 38px; }
+		.wall-slot { width: 25px; height: 38px; }
+	}
+	</style>
+</head>
+<body>
+
+<!-- ヒーローヘッダー -->
+<header class="rulebook-hero">
+	<div class="container">
+		<p class="subtitle mb-1">CARD GAME RULEBOOK</p>
+		<h1>Rampart</h1>
+		<p class="subtitle mb-2">〜 砦と瓦礫 〜</p>
+		<div class="info-badges">
+			<span class="badge bg-secondary"><i class="fa-solid fa-user-group me-1"></i>2人用</span>
+			<span class="badge bg-secondary"><i class="fa-solid fa-child me-1"></i>10歳〜</span>
+			<span class="badge bg-secondary"><i class="fa-solid fa-clock me-1"></i>約30分</span>
+			<span class="badge bg-secondary"><i class="fa-solid fa-layer-group me-1"></i>トランプ52枚</span>
+			<span class="badge" style="background:var(--rampart-accent);">ver 1.0</span>
+		</div>
+	</div>
+</header>
+
+<!-- 目次ナビ -->
+<nav class="toc-nav">
+	<div class="container">
+		<div class="d-flex overflow-auto py-1">
+			<a class="nav-link" href="#overview"><i class="fa-solid fa-scroll me-1"></i>概要</a>
+			<a class="nav-link" href="#setup"><i class="fa-solid fa-gear me-1"></i>準備</a>
+			<a class="nav-link" href="#terrain"><i class="fa-solid fa-mountain me-1"></i>地形</a>
+			<a class="nav-link" href="#gamephase"><i class="fa-solid fa-dice-d20 me-1"></i>ゲーム進行</a>
+			<a class="nav-link" href="#attack"><i class="fa-solid fa-list-check me-1"></i>攻撃詳細</a>
+			<a class="nav-link" href="#defect"><i class="fa-solid fa-triangle-exclamation me-1"></i>欠陥工事</a>
+			<a class="nav-link" href="#victory"><i class="fa-solid fa-trophy me-1"></i>勝利判定</a>
+			<a class="nav-link" href="#examples"><i class="fa-solid fa-gamepad me-1"></i>プレイ例</a>
+		</div>
+	</div>
+</nav>
+
+<main class="container py-2">
+
+	<!-- 概要 -->
+	<section class="rulebook-section anchor" id="overview">
+		<h2 class="section-title"><i class="fa-solid fa-scroll"></i>ゲーム概要</h2>
+		<div class="row g-4 align-items-center">
+			<div class="col-md-7">
+				<p>
+					<strong>Rampart</strong> (ランパート)は、トランプ1組で遊ぶ2人用の対戦カードゲームです。
+					プレイヤーはカードで<strong>防御壁</strong>を構築しながら、相手の壁を攻め崩し、<strong>ライフカード</strong>を全て裏返すことで完全勝利を目指します。
+				</p>
+				<p>
+					壁の数字・スート(絵柄)・段の配置が戦略の鍵。作戦カード(J/Q/K)や地形カードを駆使して相手の一手先を読む、思考型のカードゲームです。
+				</p>
+				<div class="rule-note">
+					<i class="fa-solid fa-star me-1"></i>
+					<strong>共通ルール:</strong>カードの数字を使う場面では、<strong>A=1、J=11、Q=12、K=13</strong>として扱います。
+				</div>
+				<div class="small">
+					サマリーシートは <a href="./assets/docs/rampart_summary.pdf" target="_blank">こちら</a> からダウンロードできます。
+				</div>
+			</div>
+			<div class="col-md-5 text-center">
+				<div class="card-row justify-content-center mb-2">
+					<img src="./assets/images/project/d11.png" class="card-img lg" alt="ダイヤJ">
+					<img src="./assets/images/project/c12.png" class="card-img lg" alt="クラブQ">
+					<img src="./assets/images/project/s13.png" class="card-img lg" alt="スペードK">
+					<img src="./assets/images/project/h1.png" class="card-img lg" alt="ハートA">
+				</div>
+				<p class="text-muted small">作戦カード(J/Q/K)とライフカード(A)</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- セットアップ -->
+	<section class="rulebook-section anchor" id="setup">
+		<h2 class="section-title"><i class="fa-solid fa-gear"></i>ゲームの準備</h2>
+		<div class="row g-4">
+			<div class="col-md-6">
+				<h5 class="mb-2" style="color:var(--rampart-gold)"><i class="fa-solid fa-list-ol me-2"></i>手順</h5>
+				<ol class="list-group list-group-numbered list-group-flush">
+					<li class="list-group-item bg-transparent border-bottom py-2" style="border-color:var(--rampart-border)!important">
+						ジョーカーが混ざっていないか確認し、あれば除外します。
+					</li>
+					<li class="list-group-item bg-transparent border-bottom py-2" style="border-color:var(--rampart-border)!important">
+						<strong>Aを4枚</strong>抜き出し、各プレイヤーに2枚ずつ配る。表向きにしてライフゾーンに並べます。
+						<div class="card-row mt-2">
+							<img src="./assets/images/project/c1.png" class="card-img sm" alt="クラブA">
+							<img src="./assets/images/project/h1.png" class="card-img sm" alt="ハートA">
+							<span class="text-muted small ms-1">← 各プレイヤーのライフ(初期値2)</span>
+						</div>
+					</li>
+					<li class="list-group-item bg-transparent border-bottom py-2" style="border-color:var(--rampart-border)!important">
+						<strong>5を4枚</strong>・<strong>7を4枚</strong>を抜き出し、一方に5を4枚、他方に7を4枚渡します。
+						各プレイヤーは4枚の中から<strong>スートを2つ選び地形カード</strong>として獲得します。残りは山に戻します。
+						<div class="card-row mt-2">
+							<img src="./assets/images/project/s5.png" class="card-img sm" alt="スペード5">
+							<img src="./assets/images/project/d5.png" class="card-img sm" alt="ダイヤ5">
+							<img src="./assets/images/project/c5.png" class="card-img sm" alt="クラブ5">
+							<img src="./assets/images/project/h5.png" class="card-img sm" alt="ハート5">
+							<span class="text-muted small ms-1">または7のセット</span>
+						</div>
+					</li>
+					<li class="list-group-item bg-transparent border-bottom py-2" style="border-color:var(--rampart-border)!important">
+						地形カードを<strong>3&times;3グリッドの下</strong>(1列に1枚まで)にセットします。
+						<div class="rule-note mt-2">
+							<i class="fa-solid fa-info-circle"></i>
+							後から手札に加わった5や7は地形カードとしては使えません。
+						</div>
+					</li>
+					<li class="list-group-item bg-transparent border-bottom py-2" style="border-color:var(--rampart-border)!important">
+						残り<strong>44枚</strong>をシャッフルし、各プレイヤーに<strong>6枚</strong>ずつ配ります。
+						残りは<strong>資源の山</strong>として中央に置きます。
+					</li>
+					<li class="list-group-item bg-transparent py-2">
+						じゃんけんなどで先行・後攻を決め、先行からプレイを始めます。
+					</li>
+				</ol>
+			</div>
+			<div class="col-md-6">
+				<h5 class="mb-2" style="color:var(--rampart-gold)"><i class="fa-solid fa-chess-board me-2"></i>場のレイアウト</h5>
+				<div class="example-box mb-2">
+					<div class="example-label mb-2">ライフカード(枚数でライフを管理)</div>
+					<p class="small mb-2">カードの数字は関係なく、<strong>表向きの枚数がライフ</strong>です。</p>
+					<div class="lifezone-demo mb-1">
+						<img src="./assets/images/project/c1.png" class="card-img sm" alt="A表">
+						<img src="./assets/images/project/h1.png" class="card-img sm" alt="A表">
+						<span class="text-success fw-bold small">→ ライフ2(満タン)</span>
+					</div>
+					<div class="lifezone-demo mb-1">
+						<img src="./assets/images/project/c1.png" class="card-img sm" alt="A表">
+						<img src="./assets/images/project/back.png" class="card-img sm flip" alt="A裏">
+						<span class="fw-bold small" style="color:var(--rampart-gold)">→ ライフ1</span>
+					</div>
+					<div class="lifezone-demo">
+						<img src="./assets/images/project/back.png" class="card-img sm flip" alt="A裏">
+						<img src="./assets/images/project/back.png" class="card-img sm flip" alt="A裏">
+						<span class="text-danger fw-bold small">→ ライフ0(ゲーム終了)</span>
+					</div>
+				</div>
+
+				<div class="example-box">
+					<div class="example-label mb-2">3×3グリッドと地形の構造</div>
+					<div class="d-flex gap-3 align-items-start">
+						<div>
+							<div class="wall-grid">
+								<div class="grid-row-label">3段目</div>
+								<div class="wall-slot filled"><span class="small">小</span></div>
+								<div class="wall-slot"><span class="small">空</span></div>
+								<div class="wall-slot"><span class="small">空</span></div>
+
+								<div class="grid-row-label">2段目</div>
+								<div class="wall-slot filled"><span class="small">中</span></div>
+								<div class="wall-slot filled"><span class="small">中</span></div>
+								<div class="wall-slot"><span class="small">空</span></div>
+
+								<div class="grid-row-label">1段目</div>
+								<div class="wall-slot filled"><span class="small">大</span></div>
+								<div class="wall-slot filled"><span class="small">大</span></div>
+								<div class="wall-slot filled"><span class="small">大</span></div>
+
+								<div class="grid-row-label">地形</div>
+								<div class="wall-slot terrain"><span class="small">地形</span></div>
+								<div class="wall-slot"><span class="small">なし</span></div>
+								<div class="wall-slot terrain"><span class="small">地形</span></div>
+							</div>
+						</div>
+						<div class="small text-muted">
+							<p class="mb-1">・1段目が最下段(手前)</p>
+							<p class="mb-1">・下の段から埋めて配置する</p>
+							<p class="mb-1">・上の段ほど<strong>小さい数字</strong></p>
+							<p class="mb-1">・同じ数字は上段に置けない</p>
+							<p class="mb-1">・地形は1列に1枚まで</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 地形カード -->
+	<section class="rulebook-section anchor" id="terrain">
+		<h2 class="section-title"><i class="fa-solid fa-mountain"></i>地形カード</h2>
+		<p>地形カードはグリッドの各列の下に配置し、条件が揃ったとき<strong>任意で発動</strong>できる特殊効果を持ちます。発動しないことも選べます。</p>
+
+		<div class="row g-3 mb-2">
+			<div class="col-sm-6 col-lg-3">
+				<div class="phase-card h-100">
+					<div class="d-flex align-items-center gap-2 mb-2">
+						<img src="./assets/images/project/s5.png" class="card-img sm" alt="スペード5">
+						<img src="./assets/images/project/s7.png" class="card-img sm" alt="スペード7">
+						<span class="suit-badge suit-spade">♠ スペード</span>
+					</div>
+					<p class="small mb-1"><strong style="color:var(--rampart-gold)">発動条件:</strong>この列への攻撃が宣言されたとき</p>
+					<p class="small mb-1"><strong class="text-success">効果:</strong>攻撃力を半分(端数切り捨て)にする。割り切り攻撃も無効化。</p>
+					<p class="small text-muted mb-1">発動後、このカードは瓦礫の山へ。</p>
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="phase-card h-100">
+					<div class="d-flex align-items-center gap-2 mb-2">
+						<img src="./assets/images/project/d5.png" class="card-img sm" alt="ダイヤ5">
+						<img src="./assets/images/project/d7.png" class="card-img sm" alt="ダイヤ7">
+						<span class="suit-badge suit-diamond">♦ ダイヤ</span>
+					</div>
+					<p class="small mb-1"><strong style="color:var(--rampart-gold)">発動条件:</strong>この列の壁が全て崩されたとき</p>
+					<p class="small mb-1"><strong class="text-success">効果:</strong>山札から2枚を手札に加える(6枚超でもOK)。山札がなくてもゲームは終了しない。</p>
+					<p class="small text-muted mb-1">発動後、このカードは瓦礫の山へ。</p>
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="phase-card h-100">
+					<div class="d-flex align-items-center gap-2 mb-2">
+						<img src="./assets/images/project/c5.png" class="card-img sm" alt="クラブ5">
+						<img src="./assets/images/project/c7.png" class="card-img sm" alt="クラブ7">
+						<span class="suit-badge suit-club">♣ クラブ</span>
+					</div>
+					<p class="small mb-1"><strong style="color:var(--rampart-gold)">発動条件:</strong>この列に3段が揃い、1段目が表向き・縦向きになったとき</p>
+					<p class="small mb-1"><strong class="text-success">効果:</strong>スートに関わらずこの列を<strong>強固な壁</strong>として扱う。</p>
+					<p class="small text-muted mb-1">強固な壁が解除されたら瓦礫の山へ。</p>
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="phase-card h-100">
+					<div class="d-flex align-items-center gap-2 mb-2">
+						<img src="./assets/images/project/h5.png" class="card-img sm" alt="ハート5">
+						<img src="./assets/images/project/h7.png" class="card-img sm" alt="ハート7">
+						<span class="suit-badge suit-heart">♥ ハート</span>
+					</div>
+					<p class="small mb-1"><strong style="color:var(--rampart-gold)">発動条件:</strong>この列の壁が全て崩され、かつ自分のライフが1つ以上失われているとき</p>
+					<p class="small mb-1"><strong class="text-success">効果:</strong>このカードをライフゾーンに表向きで追加。最大ライフが3になる。</p>
+					<p class="small text-muted mb-1">ライフとして残り続ける。</p>
+				</div>
+			</div>
+		</div>
+		<div class="rule-note">
+			<i class="fa-solid fa-circle-info me-1"></i>
+			構築・攻撃フェーズで条件が揃った場合に発動できます。発動はあくまで任意です。
+		</div>
+	</section>
+
+	<!-- ゲーム進行 -->
+	<section class="rulebook-section anchor" id="gamephase">
+		<h2 class="section-title"><i class="fa-solid fa-dice-d20"></i>ゲームの進行</h2>
+		<p class="mb-4">各プレイヤーは自分のターンに、以下の<strong>4つのフェーズ</strong>を順番に行います。先行の1ターン目は攻撃フェーズをスキップします。</p>
+
+		<!-- フェーズ1 -->
+		<div class="phase-card" data-phase="フェーズ1">
+			<h4><i class="fa-solid fa-chess me-2"></i>作戦フェーズ<span class="phase-optional">任意</span></h4>
+			<p class="small">手札のJ・Q・Kを1枚まで選び<strong>作戦カード</strong>として使えます。ライフゾーンの隣に置き、即座に効果を発動します。</p>
+
+			<table class="effect-table">
+				<thead>
+					<tr><th class="text-nowrap">カード</th><th class="text-nowrap">スート</th><th class="text-nowrap">効果</th></tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<div class="card-row">
+								<img src="./assets/images/project/s11.png" class="card-img sm" alt="スペードJ">
+								<img src="./assets/images/project/s12.png" class="card-img sm" alt="スペードQ">
+								<img src="./assets/images/project/s13.png" class="card-img sm" alt="スペードK">
+							</div>
+						</td>
+						<td class="text-nowrap"><span class="suit-badge suit-spade">♠ スペード</span></td>
+						<td>このターンの全攻撃の<strong>攻撃力を2倍</strong>にする。</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="card-row">
+								<img src="./assets/images/project/d11.png" class="card-img sm" alt="ダイヤJ">
+								<img src="./assets/images/project/d12.png" class="card-img sm" alt="ダイヤQ">
+								<img src="./assets/images/project/d13.png" class="card-img sm" alt="ダイヤK">
+							</div>
+						</td>
+						<td class="text-nowrap"><span class="suit-badge suit-diamond">♦ ダイヤ</span></td>
+						<td>瓦礫の山から好きなカードを1枚手札に加える。加えたカードは相手に見せない。手札6枚超でもOK。</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="card-row">
+								<img src="./assets/images/project/c11.png" class="card-img sm" alt="クラブJ">
+								<img src="./assets/images/project/c12.png" class="card-img sm" alt="クラブQ">
+								<img src="./assets/images/project/c13.png" class="card-img sm" alt="クラブK">
+							</div>
+						</td>
+						<td class="text-nowrap"><span class="suit-badge suit-club">♣ クラブ</span></td>
+						<td>相手の<strong>1段目の壁を1枚選び横向き</strong>にする。強固な壁の構築を阻止できる。</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="card-row">
+								<img src="./assets/images/project/h11.png" class="card-img sm" alt="ハートJ">
+								<img src="./assets/images/project/h12.png" class="card-img sm" alt="ハートQ">
+								<img src="./assets/images/project/h13.png" class="card-img sm" alt="ハートK">
+							</div>
+						</td>
+						<td class="text-nowrap"><span class="suit-badge suit-heart">♥ ハート</span></td>
+						<td>ライフを1つ回復(裏向きのAを1枚表向きに戻す)。満タン時は枚数増加なし。</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="rule-highlight mt-3">
+				<i class="fa-solid fa-plus-circle"></i>
+				<strong>追加コスト:</strong>作戦カードと<strong>同じスート</strong>のカードを手札から1枚支払うことで、<strong>構築フェーズ(+1枚配置)</strong>か<strong>攻撃フェーズ(+1回攻撃)</strong>のどちらかを強化できます。
+				<ul class="small mt-2 mb-0">
+					<li>構築を強化 → 追加コストカードを<strong>横向き</strong>に作戦カードの隣に置く</li>
+					<li>攻撃を強化 → 追加コストカードを<strong>縦向き</strong>に作戦カードの隣に置く</li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- フェーズ2 -->
+		<div class="phase-card" data-phase="フェーズ2">
+			<h4><i class="fa-solid fa-chess-rook me-2"></i>構築フェーズ<span class="phase-optional">任意</span></h4>
+			<p class="small">3 &times; 3グリッドに手札から<strong>最大2枚</strong>(構築の追加コストあれば3枚)配置して防御壁を作ります。</p>
+			<div class="row g-3">
+				<div class="col-md-7">
+					<h6 style="color:var(--rampart-gold)">配置のルール</h6>
+					<ul class="small">
+						<li>各列は<strong>1段目 → 2段目 → 3段目</strong>の順にしか積めない。</li>
+						<li>上の段は下の段より<strong>必ず小さい数字</strong>(同じ数字も不可)。</li>
+						<li>1回のターンで<strong>異なる列</strong>に分けて配置できる。</li>
+						<li>1段目のカードは<strong>裏向き</strong>に配置できる(ブラフ)。<br>※攻撃を受けるまで表にできない。</li>
+					</ul>
+					<h6 class="mt-3" style="color:var(--rampart-gold)">強固な壁</h6>
+					<ul class="small">
+						<li>3段が<strong>全て同じスート</strong>で揃うと<strong>強固な壁</strong>になる。</li>
+						<li>1段目が<strong>裏向きまたは横向き</strong>の場合は強固な壁にならない。</li>
+						<li>強固な壁がある間は<strong>新しい壁を構築できない</strong>。解除されれば再び構築可能。</li>
+					</ul>
+				</div>
+				<div class="col-md-5">
+					<div class="example-box">
+						<div class="example-label">強固な壁の例(同スートで3段)</div>
+						<div class="d-flex gap-2 align-items-end justify-content-center mt-2">
+							<div class="text-center">
+								<img src="./assets/images/project/h2.png" class="card-img sm" alt="ハート2"><br>
+								<img src="./assets/images/project/h6.png" class="card-img sm" alt="ハート6"><br>
+								<img src="./assets/images/project/h10.png" class="card-img sm" alt="ハート10">
+								<div class="small mt-1 text-danger"><i class="fa-solid fa-shield"></i>強固</div>
+							</div>
+							<div class="text-center ms-3">
+								<img src="./assets/images/project/c4.png" class="card-img sm" alt="クラブ4"><br>
+								<img src="./assets/images/project/s7.png" class="card-img sm" alt="スペード7"><br>
+								<img src="./assets/images/project/d8.png" class="card-img sm" alt="ダイヤ8">
+								<div class="small mt-1 text-muted">通常</div>
+							</div>
+							<div class="text-center ms-3">
+								<img src="./assets/images/project/h4.png" class="card-img sm" alt="ハート4"><br>
+								<img src="./assets/images/project/h5.png" class="card-img sm" alt="ハート5"><br>
+								<img src="./assets/images/project/back.png" class="card-img sm" alt="ダイヤ8">
+								<div class="small mt-1 text-muted">通常</div>
+							</div>
+							<div class="text-center ms-3">
+								<img src="./assets/images/project/d8.png" class="card-img sm" alt="ダイヤ8"><br>
+								<img src="./assets/images/project/d10.png" class="card-img sm" alt="ダイヤ10"><br>
+								<img src="./assets/images/project/d13.png" class="card-img sm fa-rotate-90" alt="ダイヤ13">
+								<div class="small mt-1 text-muted">通常</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- フェーズ3 -->
+		<div class="phase-card" data-phase="フェーズ3">
+			<h4><i class="fa-solid fa-gavel me-2"></i>攻撃フェーズ<span class="phase-optional">任意</span></h4>
+			<p class="small">基本は<strong>1ターン1回</strong>の攻撃。攻撃の追加コストを支払っていれば2回攻撃できます。1回の攻撃で手札から<strong>1〜2枚</strong>を出し、数字の合計が攻撃力になります。スペード作戦の2倍効果がある場合は合計後の値を2倍にします。</p>
+			<div class="example-box">
+				<div class="example-label">攻撃力の計算例</div>
+				<div class="card-row align-items-center">
+					<img src="./assets/images/project/d5.png" class="card-img sm" alt="5">
+					<span class="text-muted">+</span>
+					<img src="./assets/images/project/s11.png" class="card-img sm" alt="J=11">
+					<span class="text-muted">=</span>
+					<strong style="color:var(--rampart-gold)">16</strong>
+					<span class="text-muted small ms-2">(スペード作戦あり → 16 &times; 2 = <strong style="color:var(--rampart-accent)">32</strong>)</span>
+				</div>
+			</div>
+			<div class="rule-note mt-2">
+				<i class="fa-solid fa-ban"></i>先行の1ターン目は攻撃フェーズをスキップします。<br>
+				<i class="fa-solid fa-feather-pointed"></i>攻撃には<a class="link-offset-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="#attack">細かいルール</a>があります。
+			</div>
+		</div>
+
+		<!-- フェーズ4 -->
+		<div class="phase-card" data-phase="フェーズ4">
+			<h4><i class="fa-solid fa-broom me-2"></i>整理フェーズ</h4>
+			<ol class="small mb-0">
+				<li>使用した作戦カード・追加コストカードを瓦礫の山へ移動する。</li>
+				<li>手札が6枚になるように資源の山から補充する(すでに6枚以上なら補充しない)。</li>
+				<li>資源の山が尽きて6枚に補充できない場合、<strong>ゲーム終了</strong> → 勝利判定へ。</li>
+			</ol>
+		</div>
+	</section>
+
+	<!-- 攻撃詳細 -->
+	<section class="rulebook-section anchor" id="attack">
+		<h2 class="section-title"><i class="fa-solid fa-list-check"></i>攻撃の詳細ルール</h2>
+		<div class="row g-4">
+			<div class="col-md-6">
+				<h5 style="color:var(--rampart-gold)">壁への攻撃</h5>
+				<p class="small">相手に壁がある場合、壁から1枚を選んで攻撃します。選んだカードの数字が<strong>防御力</strong>です。</p>
+
+				<table class="effect-table">
+					<thead><tr><th>状況</th><th>結果</th></tr></thead>
+					<tbody>
+						<tr><td class="small">攻撃力 &gt; 防御力</td><td class="small text-success">壁を<strong>破壊</strong>。破壊された壁の上にあるカードも全て破壊する。</td></tr>
+						<tr><td class="small">攻撃力 <strong>= 防御力</strong></td><td class="small text-danger">攻撃<strong>失敗</strong>。</td></tr>
+						<tr><td class="small">攻撃力で防御力が<strong>割り切れる</strong><br>(攻撃力 &lt; 防御力)</td><td class="small" style="color:var(--rampart-gold)">壁を破壊(スライドあり)。<strong>貫通判定</strong>へ。</td></tr>
+						<tr><td class="small">それ以外</td><td class="small text-danger">攻撃<strong>失敗</strong>。</td></tr>
+					</tbody>
+				</table>
+
+				<div class="example-box mt-3">
+					<div class="example-label">割り切り攻撃の例</div>
+					<div class="card-row align-items-center mb-1">
+						<img src="./assets/images/project/d3.png" class="card-img sm" alt="攻撃力3">
+						<span class="small text-muted">で</span>
+						<img src="./assets/images/project/s9.png" class="card-img sm" alt="防御9">
+						<span class="small text-muted">を攻撃</span>
+					</div>
+					<p class="small mb-0">3 &lt; 9 だが、<strong>9 &divide; 3 = 3</strong> (割り切れる) → 壁を破壊してスライド処理。</p>
+				</div>
+
+				<h5 class="mt-4" style="color:var(--rampart-gold)">壁がない場合(直接攻撃)</h5>
+				<p class="small">攻撃力に関わらず相手のライフカードを1枚裏返します。<strong>全ライフが裏返ったら勝利判定へ移行します。</strong></p>
+
+				<h5 class="mt-3" style="color:var(--rampart-gold)">強固な壁への攻撃</h5>
+				<p class="small">攻撃が成功しても即座には破壊されません。</p>
+				<div class="rule-highlight">
+					<strong>攻撃した段に関わらず、1段目のカードを横向きにする。</strong><br>
+					<span class="small">→ これにより強固な壁の状態が解除される。</span>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<h5 style="color:var(--rampart-gold)">裏向きカードへの攻撃</h5>
+				<p class="small mb-1">裏向きカードを攻撃した場合、まず<strong>表向きに</strong>します。</p>
+				<ul class="small ps-3">
+					<li class="mb-2">表にしたことで列にスートが揃った<br> → その時点で強固な壁になる。</li>
+					<li>表にしたカードが<strong> <span class="suit-badge suit-club">♣クラブ</span> だった</strong><br>→ <strong>トラップが発動</strong>し、攻撃失敗。攻撃に使ったカードは瓦礫の山へ。</li>
+				</ul>
+
+				<h5 class="mt-3" style="color:var(--rampart-gold)">貫通</h5>
+				<p class="small">割り切り攻撃で壁を破壊したとき、<strong>スライド処理前</strong>に以下の2条件を確認します。</p>
+
+				<div class="row g-2 align-items-start">
+					<div class="col-auto">
+						<div class="penetration-grid">
+							<div class="pen-slot"></div>
+							<div class="pen-slot condition">上段</div>
+							<div class="pen-slot"></div>
+							<div class="pen-slot condition">左隣</div>
+							<div class="pen-slot target">攻撃</div>
+							<div class="pen-slot condition">右隣</div>
+							<div class="pen-slot"></div>
+							<div class="pen-slot"></div>
+							<div class="pen-slot"></div>
+						</div>
+					</div>
+					<div class="col small">
+						<p><span class="badge me-1" style="background:var(--rampart-gold)">条件1</span>破壊した壁の<strong>1つ上の段</strong>の数字も攻撃力で割り切れる</p>
+						<p><span class="badge me-1" style="background:var(--rampart-gold)">条件2</span>破壊した壁と<strong>同じ段の左右いずれか</strong>の数字も攻撃力で割り切れる</p>
+						<p class="text-danger fw-bold mb-0">両方満たす → 貫通発動!<br>相手のライフを1つ失わせる。</p>
+					</div>
+				</div>
+
+				<div class="rule-note mt-2 small">
+					<i class="fa-solid fa-eye"></i>
+					貫通判定の対象に裏向きのカードがある場合は表にして確認します。このとき、クラブトラップが発動したら判定失敗。貫通は発動しません。
+				</div>
+
+				<h5 class="mt-3" style="color:var(--rampart-gold)">スライド処理</h5>
+				<p class="small">破壊された壁の上に積まれたカード<strong>全体を1段下にずらします</strong>。カードの状態(表裏・縦横)はそのまま引き継ぎます。</p>
+
+				<div class="example-box">
+					<div class="example-label">スライドの例</div>
+					<div class="d-flex align-items-center gap-2">
+						<div class="text-center small">
+							<div class="text-muted mb-1">3段目</div>
+							<img src="./assets/images/project/c2.png" class="card-img sm" alt="2">
+							<div class="text-muted mt-1">2段目</div>
+							<img src="./assets/images/project/s4.png" class="card-img sm" alt="4">
+							<div class="text-muted mt-1">1段目</div>
+							<img src="./assets/images/project/d6.png" class="card-img sm" alt="6(破壊)" style="opacity:0.3">
+						</div>
+						<div><i class="fa-solid fa-arrow-right" style="color:var(--rampart-gold)"></i></div>
+						<div class="text-center small">
+							<div class="text-muted mb-1">3段目</div>
+							<div class="wall-slot">空</div>
+							<div class="text-muted mt-1">2段目</div>
+							<img src="./assets/images/project/c2.png" class="card-img sm" alt="2">
+							<div class="text-muted mt-1">1段目</div>
+							<img src="./assets/images/project/s4.png" class="card-img sm" alt="4">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 欠陥工事 -->
+	<section class="rulebook-section anchor" id="defect">
+		<h2 class="section-title"><i class="fa-solid fa-triangle-exclamation"></i>欠陥工事</h2>
+		<div class="row g-4">
+			<div class="col-md-7">
+				<p>相手の壁がルール違反の配置になっていることに気づいた場合、<strong>その列を破壊</strong>できます。</p>
+				<div class="rule-highlight mb-2">
+					<strong>違反の定義:</strong>上の段が下の段と<strong>同じ数字、または大きい数字</strong>になっている場合。
+				</div>
+				<h6 style="color:var(--rampart-gold)">指摘できるタイミング</h6>
+				<ul class="small ps-3">
+					<li>自分のターンの<strong>作戦フェーズ開始前</strong></li>
+					<li>相手の壁カードが<strong>表向きになったタイミング</strong></li>
+				</ul>
+				<p class="small">指摘できる列は<strong>1列のみ</strong>です。破壊されたカードは瓦礫の山へ移動します。</p>
+			</div>
+			<div class="col-md-5">
+				<div class="example-box">
+					<div class="example-label">欠陥工事の例</div>
+					<div class="d-flex gap-3 align-items-end justify-content-center mt-2">
+						<div class="text-center">
+							<img src="./assets/images/project/c8.png" class="card-img sm" alt="8(3段目)"><br>
+							<img src="./assets/images/project/d4.png" class="card-img sm" alt="4(2段目)"><br>
+							<img src="./assets/images/project/h10.png" class="card-img sm" alt="10(1段目)">
+							<div class="small text-danger mt-1"><i class="fa-solid fa-xmark me-1"></i>違反!</div>
+							<div class="small text-muted"><span class="suit-badge suit-diamond">♦4</span> &lt; <span class="suit-badge suit-club">♣8</span></div>
+							
+						</div>
+						<div class="text-center">
+							<img src="./assets/images/project/d3.png" class="card-img sm" alt="8(3段目)"><br>
+							<img src="./assets/images/project/h9.png" class="card-img sm" alt="4(2段目)"><br>
+							<img src="./assets/images/project/s9.png" class="card-img sm" alt="10(1段目)">
+							<div class="small text-danger mt-1"><i class="fa-solid fa-xmark me-1"></i>違反!</div>
+							<div class="small text-muted"><span class="suit-badge suit-spade">♠9</span> = <span class="suit-badge suit-heart">♥9</span></div>
+						</div>
+						<div class="text-center">
+							<img src="./assets/images/project/s3.png" class="card-img sm" alt="3(3段目)"><br>
+							<img src="./assets/images/project/h6.png" class="card-img sm" alt="6(2段目)"><br>
+							<img src="./assets/images/project/d9.png" class="card-img sm" alt="9(1段目)">
+							<div class="small text-success mt-1"><i class="fa-solid fa-check me-1"></i>OK</div>
+							<div class="small text-muted"><span class="suit-badge suit-diamond">♦9</span> &gt; <span class="suit-badge suit-heart">♥6</span> &gt; <span class="suit-badge suit-spade">♠3</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 勝利判定 -->
+	<section class="rulebook-section anchor" id="victory">
+		<h2 class="section-title"><i class="fa-solid fa-trophy"></i>勝利判定</h2>
+		<p><strong style="color:var(--rampart-accent)">完全勝利</strong>:相手のライフカードを全て裏返したプレイヤーの勝ちです。</p>
+		<p>資源の山が尽きてゲームが終了した場合は、以下の順に勝者を決めます。</p>
+		<div class="col-md-8">
+			<div class="victory-step"><div class="step-num">1</div><div><strong>ライフが多い方</strong>が勝ち。<span class="text-muted small">(表向きのライフカードの枚数)</span></div></div>
+			<div class="victory-step"><div class="step-num">2</div><div><strong>壁カードの枚数が多い方</strong>が勝ち。</div></div>
+			<div class="victory-step"><div class="step-num">3</div><div><strong>地形カードの枚数が多い方</strong>が勝ち。</div></div>
+			<div class="victory-step"><div class="step-num">4</div><div>壁カードの<strong>数字の合計が"小さい方"</strong>が勝ち。</div></div>
+			<div class="victory-step"><div class="step-num"><i class="fa-solid fa-equals" style="font-size:0.65rem"></i></div><div>全て同じなら<strong>引き分け</strong>。</div></div>
+		</div>
+	</section>
+
+	<!-- プレイ例 -->
+	<section class="rulebook-section anchor" id="examples">
+		<h2 class="section-title"><i class="fa-solid fa-gamepad"></i>プレイ例</h2>
+		<div class="row g-4">
+			<div class="col-md-6">
+				<div class="example-box h-100 mt-0">
+					<div class="example-label">例1:割り切り攻撃と貫通</div>
+					<p class="small mb-2">相手の壁の状態:</p>
+					<div class="d-flex gap-2 align-items-end mb-2">
+						<div class="text-center">
+							<img src="./assets/images/project/s2.png" class="card-img sm" alt="2"><br>
+							<img src="./assets/images/project/d4.png" class="card-img sm" alt="4"><br>
+							<img src="./assets/images/project/h8.png" class="card-img sm" style="border: #c0392b 1px dotted; border-radius: 3px;" alt="8">
+							<div class="small text-muted mt-1">左列</div>
+						</div>
+						<div class="text-center">
+							<img src="./assets/images/project/c3.png" class="card-img sm" alt="3"><br>
+							<img src="./assets/images/project/s6.png" class="card-img sm" style="border: #c0392b 1px dotted; border-radius: 3px;" alt="6"><br>
+							<img src="./assets/images/project/d12.png" class="card-img sm" style="opacity:0.3" alt="Q=12">
+							<div class="small text-muted mt-1">中列</div>
+						</div>
+						<div class="text-center">
+							<div class="wall-slot" style="font-size:0.65rem">空</div>
+							<img src="./assets/images/project/h5.png" class="card-img sm" alt="5"><br>
+							<img src="./assets/images/project/c9.png" class="card-img sm" alt="9">
+							<div class="small text-muted mt-1">右列</div>
+						</div>
+					</div>
+					<p class="small mb-1"><img src="./assets/images/project/d2.png" class="card-img sm" alt="2"> を出して<strong>中列1段目 <img src="./assets/images/project/d12.png" class="card-img sm" alt="12"> </strong>を攻撃。</p>
+					<p class="small mb-1">攻撃力2、防御力12。<strong>12 &divide; 2 = 6</strong>(割り切れる) → 1段目を破壊。</p>
+					<p class="small mb-1 fw-bold" style="color:var(--rampart-gold)">貫通判定(スライド前):</p>
+					<ul class="small mb-2 ps-3">
+						<li>条件1:1つ上(2段目 = <span class="suit-badge suit-spade">♠6</span>)、6 &divide; 2 = 3 <i class="fa-solid fa-check text-success"></i></li>
+						<li>条件2:左隣の同段(左列1段目 = <span class="suit-badge suit-heart">♥8</span>)、8 &divide; 2 = 4 <i class="fa-solid fa-check text-success"></i></li>
+					</ul>
+					<p class="small text-danger fw-bold mb-1">→ 貫通発動!相手のライフを1つ失わせる。</p>
+					<p class="small">その後スライド:中列の2段目(<span class="suit-badge suit-spade">♠6</span>) → 1段目、3段目(<span class="suit-badge suit-club">♣3</span>) → 2段目に移動。</p>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="example-box h-100 mt-0">
+					<div class="example-label">例2:作戦カード + 追加コスト</div>
+					<p class="small mb-2">手札に <img src="./assets/images/project/s13.png" class="card-img sm" alt="スペードK"> と <img src="./assets/images/project/s8.png" class="card-img sm" alt="スペード8"> がある。</p>
+					<p class="small mb-1"><strong>作戦:</strong><span class="suit-badge suit-spade">♠K</span>を使用 →「攻撃力2倍」発動。</p>
+					<p class="small mb-3"><span class="suit-badge suit-spade">♠8</span>を追加コストとして<strong>縦向き</strong>に置く → 攻撃が+1回(計2回)。</p>
+					<p class="small mb-1 fw-bold" style="color:var(--rampart-gold)">攻撃フェーズ(2回):</p>
+					<p class="small mb-1">1回目:<img src="./assets/images/project/d5.png" class="card-img sm" alt="5"> + <img src="./assets/images/project/h11.png" class="card-img sm" alt="J=11"> → (5 + 9) &times; 2 = <strong style="color:var(--rampart-accent)">攻撃力32</strong></p>
+					<p class="small mb-1">2回目:<img src="./assets/images/project/c9.png" class="card-img sm" alt="9"> → 9 &times; 2 = <strong style="color:var(--rampart-accent)">攻撃力18</strong></p>
+					<p class="small mt-2 text-muted">手札のコスト:作戦1枚 + 追加コスト1枚 + 攻撃用3枚 = 合計5枚消費。</p>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="example-box h-100 mt-0">
+					<div class="example-label">例3:クラブ地形で強固な壁</div>
+					<p class="small mb-2">クラブの地形カードを左列下にセット済み。3段積まれた列で、1段目が表向き・縦向きの場合:</p>
+					<div class="mb-2">
+						<div class="wall-grid">
+							<div class="grid-row-label">3段目</div>
+							<div class="wall-slot filled"><img src="./assets/images/project/d2.png" class="card-img sm" alt="2"></div>
+							<div class="wall-slot"><span class="small"></span></div>
+							<div class="wall-slot"><span class="small"></span></div>
+
+							<div class="grid-row-label">2段目</div>
+							<div class="wall-slot filled"><img src="./assets/images/project/s6.png" class="card-img sm" alt="6"></div>
+							<div class="wall-slot"><span class="small"></span></div>
+							<div class="wall-slot"><span class="small"></span></div>
+
+							<div class="grid-row-label">1段目</div>
+							<div class="wall-slot filled"><img src="./assets/images/project/h10.png" class="card-img sm" alt="10"></div>
+							<div class="wall-slot"><span class="small"></span></div>
+							<div class="wall-slot"><span class="small"></span></div>
+
+							<div class="grid-row-label">地形</div>
+							<div class="wall-slot terrain"><img src="./assets/images/project/c5.png" class="card-img sm" alt="地形"></div>
+							<div class="wall-slot"><span class="small">なし</span></div>
+							<div class="wall-slot terrain"><img src="./assets/images/project/back.png" class="card-img sm" alt="地形"></div>
+						</div>
+					</div>
+					<p class="small mb-1">左の列にスートが揃っていないが<strong>クラブ地形を発動</strong> → この列を<span class="text-danger"><i class="fa-solid fa-shield"></i>強固な壁</span>として扱う。</p>
+					<p class="small">強固な壁が解除されたら地形カードは瓦礫へ移動する。</p>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="example-box h-100 mt-0">
+					<div class="example-label">例4:トラップと欠陥工事</div>
+					<p class="small mb-1"><strong>トラップ:</strong>裏向きカードを攻撃 → 表にしたらクラブだった。</p>
+					<p class="small mb-2"><img src="./assets/images/project/back.png" class="card-img sm" alt="裏"><span class="small text-muted mx-1"> → 表向きに → </span><img src="./assets/images/project/c7.png" class="card-img sm" alt="クラブ7"><span class="small text-danger ms-2 fw-bold">トラップ発動!攻撃失敗</span></p>
+					<p class="small mb-2 text-muted">攻撃に使ったカードは瓦礫へ山へ移動。壁はそのまま残る。</p>
+					<hr style="border-color:var(--rampart-border)">
+					<p class="small mb-1"><strong>欠陥工事:</strong>裏向きカードが表になり違反配置が発覚した。</p>
+					<div class="d-flex gap-2 align-items-end mb-2">
+						<div class="text-center">
+							<img src="./assets/images/project/s4.png" class="card-img sm" alt="4"><br>
+							<img src="./assets/images/project/d7.png" class="card-img sm" alt="7"><br>
+							<img src="./assets/images/project/c7.png" class="card-img sm" alt="7">
+						</div>
+						<div class="small text-muted">
+							攻撃によって1段目が表向きになる<br>
+							<span class="suit-badge suit-club">♣7</span> = <span class="suit-badge suit-diamond">♦7</span> → <span class="text-danger fw-bold">違反!</span><br>
+							→ この列を破壊できる
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<p class="mt-2 small" style="opacity:0.7; font-size:0.75rem!important;">
+		<i class="fa-solid fa-circle-info"></i>
+		本ゲームはAIを活用して開発しました。
+		意図せず既存のゲームと類似したルールになっている可能性がありますが、特定のゲームを模倣・侵害する意図はありません。
+		同様のルールをお持ちの方がいらっしゃれば、<i class="fa-brands fa-x-twitter"></i> <a href="https://x.com/Dnal_Yen_Sid" target="_blank" rel="noopener" style="color:inherit;">@Dnal_Yen_Sid</a> までご一報いただけますと幸いです。
+		(2026.3.12)
+	</p>
+</main>
+
+<footer class="rulebook-footer">
+	<div class="container">
+		<p class="mb-1"><strong style="color:var(--rampart-accent)">Rampart 〜砦と瓦礫〜</strong> ver 1.0</p>
+		<p class="mb-0">トランプ1組で遊ぶ2人用対戦カードゲーム</p>
+	</div>
+</footer>
+
+</body>
+</html>
